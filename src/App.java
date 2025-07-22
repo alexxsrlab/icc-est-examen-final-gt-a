@@ -1,15 +1,43 @@
+import controllers.MaquinaController;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
-
-import controllers.MaquinaController;
 import models.Maquina;
 
 public class App {
     public static void main(String[] args) throws Exception {
         List<Maquina> maquinas = crearMaquinas();
+        MaquinaController controller = new MaquinaController();
 
+        System.out.println("METODO A");
+        int umbral = 50;
+        Stack<Maquina> pila = controller.filtrarPorSubred(maquinas, umbral);
+        System.out.println("Pila filtrada subred -> " + umbral + ":");
+        pila.forEach(System.out::println);
+        System.out.println();
+
+        System.out.println("METODO B");
+        Set<Maquina> ordenado = controller.ordenarPorSubred(pila);
+        System.out.println("TreeSet ordenado: ");
+        ordenado.forEach(System.out::println);
+        System.out.println();
+
+        System.out.println("METODO C");
+        Map<Integer, Queue<Maquina>> grupos = controller.agruparPorRiesgo(maquinas);
+        System.out.println("Grupos por riesgo: ");
+        grupos.forEach((riesgo, cola) -> System.out.println("riesgo = " + riesgo + " -> " + cola));
+        System.out.println();
+
+        System.out.println("METODO D");
+        Stack<Maquina> explotado = controller.explotarGrupo(grupos);
+        System.out.println("Grupo explotado: ");
+        while (!explotado.isEmpty()) {
+            System.out.println(explotado.pop());
+        }
+        System.out.println();
     }
 
     static List<Maquina> crearMaquinas() {
